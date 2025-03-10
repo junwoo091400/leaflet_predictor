@@ -42,13 +42,10 @@ function initMap(centre_lat, centre_lon, zoom_level) {
     });
 
     var map_layers = {'OSM':osm_map, 'ESRI Satellite':esri_sat_map, 'OpenTopoMap':osm_topo_map};
-
     map.addControl(new L.Control.Layers(map_layers, null, {position: 'topleft'}));
 
     // Map scale
     L.control.scale({imperial: false, metric: true}).addTo(map);
-
-
 }
 
 // Enable or disable user control of the map canvas, including scrolling,

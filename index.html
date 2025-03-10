@@ -25,6 +25,7 @@
     <script src="js/pred/pred.js" type="text/javascript"></script>
     <script src="js/calc/calc.js" type="text/javascript"></script>
     <script src="js/colour-map.js" type="text/javascript"></script>
+    <script src="js/L.KML.js" type="text/javascript"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
@@ -362,9 +363,9 @@
         <tr>
             <td>Latitude/Longitude:</td>
             <td>
-                <input id="lat" type="text" size="8" name="lat" value="-34.0297" 
+                <input id="lat" type="text" size="8" name="lat" value="37.8419" 
                     onKeyDown="SetSiteOther()">&nbsp;/&nbsp;
-                <input id="lon" type="text" size="8" name="lon" value="138.6917" 
+                <input id="lon" type="text" size="8" name="lon" value="126.6316" 
                     onKeyDown="SetSiteOther()">
             </td>
         </tr>
@@ -386,7 +387,7 @@
             <td>Launch altitude (m):</td>
             <td>
                 <input id="initial_alt" type="text" name="initial_alt" 
-                    value="0">
+                    value="300">
             </td>
         </tr>
         <tr>
@@ -418,11 +419,11 @@
             <td>
                 Ascent Rate (m/s): 
             </td>
-            <td><input id="ascent" type="text" name="ascent" value="5"></td>
+            <td><input id="ascent" type="text" name="ascent" value="1"></td>
         </tr>
         <tr>
             <td>Burst/Float Altitude (m):</td>
-            <td><input id="burst" type="text" name="burst" value="30000"></td>
+            <td><input id="burst" type="text" name="burst" value="4000"></td>
         </tr>
         <tr>
             <td>Flight Profile:</td>
@@ -443,7 +444,7 @@
             <td>
                 Descent Rate (<a class="tipsyLink" title="At sea level">m/s</a>):
             </td>
-            <td><input id="drag" type="text" name="drag" value="5"></td>
+            <td><input id="drag" type="text" name="drag" value="1"></td>
         </tr>
     <!--    <tr><td>Display UK NOTAMS &amp; Airspace: </td>
             <td>
@@ -456,9 +457,9 @@
         <tr>
             <td>Prediction Type (<a class="tipsyLink" title="Information on the hourly/daily prediction functions." href="https://github.com/projecthorus/leaflet_predictor/wiki#using-the-hourlydaily-prediction-functionality" target="_blank">info</a>):</td>
             <td><select id="prediction_type">
-                <option value="single" selected="selected">Single</option>
+                <option value="single">Single</option>
                 <option value="1_hour">Hourly</option>
-                <option value="3_hour">3-Hourly</option>
+                <option value="3_hour" selected="selected">3-Hourly</option>
                 <option value="6_hour">6-Hourly</option>
                 <option value="12_hour">12-Hourly</option>
                 <option value="daily">Daily</option>

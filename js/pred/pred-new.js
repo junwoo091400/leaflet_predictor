@@ -111,7 +111,6 @@ function runPrediction(){
 
     // Run the request
     tawhiriRequest(run_settings, extra_settings);
-
 }
 
 // Tawhiri API URL. Refer to API docs here: https://tawhiri.readthedocs.io/en/latest/api.html
@@ -120,7 +119,7 @@ function runPrediction(){
 // Sondehub Tawhiri Instance
 var tawhiri_api = "https://api.v2.sondehub.org/tawhiri";
 // Approximately how many hours into the future the model covers.
-var MAX_PRED_HOURS = 169;
+var MAX_PRED_HOURS = 24;
 
 function tawhiriRequest(settings, extra_settings){
     // Request a prediction via the Tawhiri API.
@@ -172,10 +171,10 @@ function tawhiriRequest(settings, extra_settings){
             return;
         }
 
-        if(settings.profile != "standard_profile"){
-            throwError("Hourly/Daily predictions are only available for the standard flight profile.");
-            return;
-        }
+        // if(settings.profile != "standard_profile"){
+        //     throwError("Hourly/Daily predictions are only available for the standard flight profile.");
+        //     return;
+        // }
 
         // Loop to advance time until end of prediction window
         while(current_hour < MAX_PRED_HOURS){
@@ -516,7 +515,8 @@ function plotMultiplePrediction(prediction, current_hour){
             closeOnClick: false, 
         }).setContent(predict_description);
     land_marker.bindPopup(landing_popup);
-    land_marker.on('click', showHideHourlyPrediction);
+    // land_marker.on('click', showHideHourlyPrediction);
+    showHideHourlyPrediction({target: land_marker});
 
     hourly_predictions[current_hour]['layers']['landing_marker'] = land_marker;
     hourly_predictions[current_hour]['landing_latlng'] = landing.latlng;
@@ -531,32 +531,33 @@ function plotMultiplePrediction(prediction, current_hour){
             landing_track_complete = false;
         }
     }
+    
     // If we dont have any undefined elements, plot.
-    if(landing_track_complete){
-        if(hourly_polyline){
-            hourly_polyline.setLatLngs(landing_track);
-        } else {
-            hourly_polyline = L.polyline(
-                landing_track,
-                {
-                    weight: 2,
-                    zIndexOffset: 100,
-                    color: '#000000'
-                }
-            ).addTo(map);
-        }
+    // if(landing_track_complete){
+    //     if(hourly_polyline){
+    //         hourly_polyline.setLatLngs(landing_track);
+    //     } else {
+    //         hourly_polyline = L.polyline(
+    //             landing_track,
+    //             {
+    //                 weight: 2,
+    //                 zIndexOffset: 100,
+    //                 color: '#000000'
+    //             }
+    //         ).addTo(map);
+    //     }
 
-        for (i in hourly_predictions){
-            hourly_predictions[i]['layers']['landing_marker'].remove();
-            hourly_predictions[i]['layers']['landing_marker'].addTo(map);
-        }
+    //     for (i in hourly_predictions){
+    //         hourly_predictions[i]['layers']['landing_marker'].remove();
+    //         hourly_predictions[i]['layers']['landing_marker'].addTo(map);
+    //     }
 
-        map.fitBounds(hourly_polyline.getBounds());
-        map.setZoom(8);
+    //     map.fitBounds(hourly_polyline.getBounds());
+    //     map.setZoom(8);
 
-        $("#cursor_pred_lastrun").show();
+    //     $("#cursor_pred_lastrun").show();
 
-    }
+    // }
 
     // var pop_marker = L.marker(
     //     burst.latlng,
@@ -605,34 +606,35 @@ function showHideHourlyPrediction(e){
     } else {
         // We need to make new icons.
 
-        var burst_icon = L.icon({
-            iconUrl: burst_img,
-            iconSize: [16,16],
-            iconAnchor: [8,8]
-        });
+        // var burst_icon = L.icon({
+        //     iconUrl: burst_img,
+        //     iconSize: [16,16],
+        //     iconAnchor: [8,8]
+        // });
 
-        var pop_marker = L.marker(
-            burst.latlng,
-            {
-                title: 'Balloon burst ('+burst.latlng.lat.toFixed(4)+', '+burst.latlng.lng.toFixed(4)+ 
-                ' at altitude ' + burst.latlng.alt.toFixed(0) + ') at ' 
-                + burst.datetime.format("HH:mm") + " UTC",
-                icon: burst_icon,
-                current_hour: current_hour
-            }
-        ).addTo(map);
+        // var pop_marker = L.marker(
+        //     burst.latlng,
+        //     {
+        //         title: 'Balloon burst ('+burst.latlng.lat.toFixed(4)+', '+burst.latlng.lng.toFixed(4)+ 
+        //         ' at altitude ' + burst.latlng.alt.toFixed(0) + ') at ' 
+        //         + burst.datetime.format("HH:mm") + " UTC",
+        //         icon: burst_icon,
+        //         current_hour: current_hour
+        //     }
+        // ).addTo(map);
         
-        hourly_predictions[current_hour]['layers']['pop_marker'] = pop_marker;
+        // hourly_predictions[current_hour]['layers']['pop_marker'] = pop_marker;
 
         var path_polyline = L.polyline(
             current_pred.flight_path,
             {
-                weight: 3,
+                weight: 4,
+                opacity: 0.5,
                 color: '#000000',
                 current_hour: current_hour
             }
         ).addTo(map);
-        path_polyline.on('click', showHideHourlyPrediction);
+        // path_polyline.on('click', showHideHourlyPrediction);
 
         hourly_predictions[current_hour]['layers']['flight_path'] = path_polyline;
     }
