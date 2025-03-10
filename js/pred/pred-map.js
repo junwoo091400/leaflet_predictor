@@ -44,6 +44,20 @@ function initMap(centre_lat, centre_lon, zoom_level) {
     var map_layers = {'OSM':osm_map, 'ESRI Satellite':esri_sat_map, 'OpenTopoMap':osm_topo_map};
     map.addControl(new L.Control.Layers(map_layers, null, {position: 'topleft'}));
 
+    // fetch('doc.kml')
+    //     .then(response => response.text())
+    //     .then(text => {
+    //         // Create new kml overlay
+    //         const parser = new DOMParser();
+    //         const kml = parser.parseFromString(text, 'text/xml');
+    //         const track = new L.KML(kml);
+    //         map.addLayer(track);
+
+    //         // Adjust map to show the kml
+    //         // const bounds = track.getBounds();
+    //         // map.fitBounds(bounds);
+    //     });
+
     // Map scale
     L.control.scale({imperial: false, metric: true}).addTo(map);
 }
