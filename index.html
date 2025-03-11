@@ -55,7 +55,7 @@
     </div>
 
 <!-- Scenario information -->
-<div id="scenario_info" class="box ui-corner-all">
+<!-- <div id="scenario_info" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <h1>Scenario Information</h1>
     <span id="cursor_info">Current mouse position: 
@@ -90,7 +90,7 @@
     <span><b>Non-Commercial Use Only. Please read the 'About' page.</b></span>
     <br />
     <span><b>The Tawhiri engine is currently experiencing some performance issues. Please be patient!</b></span>
-</div>
+</div> -->
 
 <!-- Save location to cookie -->
 <div id="location_save" class="box ui-corner-all">
@@ -343,6 +343,15 @@
     </div>
 </div>
 
+
+<div id="time_select" class="box ui-corner-all">
+    <span class="ui-corner-all control_buttons">
+        <a class="control_button" id="24h">24h</a> | 
+        <a class="control_button" id="48h">48h</a> |
+        <a class="control_button" id="72h">72h</a>
+    </span>
+</div>
+
 <!-- Launch card -->
 <div id="input_form" class="box ui-corner-all"> 
     <img class="handle" src="images/drag_handle.png" />
@@ -360,7 +369,7 @@
                 </select>
             </td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td>Latitude/Longitude:</td>
             <td>
                 <input id="lat" type="text" size="8" name="lat" value="37.8419" 
@@ -368,7 +377,12 @@
                 <input id="lon" type="text" size="8" name="lon" value="126.6316" 
                     onKeyDown="SetSiteOther()">
             </td>
-        </tr>
+        </tr> -->
+        <input id="lat" type="hidden" size="8" name="lat" value="37.8419" 
+                    onKeyDown="SetSiteOther()">&nbsp;/&nbsp;
+                <input id="lon" type="hidden" size="8" name="lon" value="126.6316" 
+                    onKeyDown="SetSiteOther()">
+
         <tr>
             <td>
                 <span><a id="setWithClick" class="tipsyLink" 
@@ -383,13 +397,17 @@
                 </span>
             </td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td>Launch altitude (m):</td>
             <td>
                 <input id="initial_alt" type="text" name="initial_alt" 
                     value="300">
             </td>
-        </tr>
+        </tr> -->
+
+        <input id="initial_alt" type="hidden" name="initial_alt" 
+                    value="300">
+
         <tr>
             <td>Launch Time (UTC):</td>
             <td>
@@ -415,12 +433,14 @@
                     </select>
                     <input id="year" type="text" name="year" value="" maxlength="4" size="4">
             </td>
-        <tr>
+        <!-- <tr>
             <td>
                 Ascent Rate (m/s): 
             </td>
             <td><input id="ascent" type="text" name="ascent" value="1"></td>
-        </tr>
+        </tr> -->
+        <input id="ascent" type="hidden" name="ascent" value="1">
+
         <tr>
             <td>Burst/Float Altitude (m):</td>
             <td><input id="burst" type="text" name="burst" value="4000"></td>
@@ -433,19 +453,24 @@
                 <option value="reverse_profile">Reverse (ascent only)</option>
             </select></td>
         </tr>
-        <tr>
+        
+        <!-- <tr>
             <td colspan="2">
                 <a id="burst-calc-show" class="tipsyLink"
                     title="Use a calculator to find highlighted values">
                     Use Burst Calculator</a>
             </td>
-        </tr>
-        <tr>
+        </tr> -->
+
+        <!-- <tr>
             <td>
                 Descent Rate (<a class="tipsyLink" title="At sea level">m/s</a>):
             </td>
             <td><input id="drag" type="text" name="drag" value="1"></td>
-        </tr>
+        </tr> -->
+
+        <input id="drag" type="hidden" name="drag" value="1">
+
     <!--    <tr><td>Display UK NOTAMS &amp; Airspace: </td>
             <td>
         <input id="notam-display" type="checkbox" name="notams" value="notams" />
@@ -472,7 +497,7 @@
         </tr>
     </table>
     </form>
-    
     </div>
+
 </body>
 </html>
