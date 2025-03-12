@@ -38,6 +38,9 @@ function runPrediction(){
     var extra_settings = {};
     run_settings.profile = $('#flight_profile').val();
     run_settings.pred_type = $('#prediction_type').val();
+
+    // FIX to Float profile
+    run_settings.profile = "float_profile";
     
     // Grab date values
     var year = $('#year').val();
@@ -50,6 +53,9 @@ function runPrediction(){
     var launch_time = moment.utc([year, month-1, day, hour, minute, 0, 0]);
     run_settings.launch_datetime = launch_time.format();
     extra_settings.launch_moment = launch_time;
+
+    // Set float time
+    extra_settings.float_time = $("#float_time").val();
 
     // Sanity check the launch date to see if it's not too far into the past or future.
     if(launch_time < (moment.utc().subtract(12, 'hours'))){
@@ -78,7 +84,7 @@ function runPrediction(){
         run_settings.float_altitude = parseFloat($('#burst').val());
 
         // Temporary
-        run_settings.stop_datetime = moment(launch_time).add(3, 'hours').format();
+        // run_settings.stop_datetime = moment(launch_time).add(3, 'hours').format();
 
         // run_settings.stop_datetime = launch_time.add(1, 'days').format();
         // NOTE: Running "launch_time.add(1, 'days')" will modify the launch_time object,
@@ -131,6 +137,10 @@ function tawhiriRequest(settings, extra_settings){
 
     if(settings.pred_type=='single'){
         hourly_mode = false;
+
+        // Set end datetime for float profile
+        settings.stop_datetime = moment(settings.launch_datetime).add(extra_settings.float_time, 'hours').format();
+
         $.get( tawhiri_api, settings )
             .done(function( data ) {
                 processTawhiriResults(data, settings);
@@ -185,8 +195,8 @@ function tawhiriRequest(settings, extra_settings){
             // Update launch time
             var current_moment = moment(extra_settings.launch_moment).add(current_hour, 'hours');
             
-            // Set to Max 3 hours by setting stop datetime (necessary for float profile)
-            var stop_datetime = moment(current_moment).add(3, 'hours').format();
+            // Set the stop datetime (necessary for float profile)
+            var stop_datetime = moment(current_moment).add(extra_settings.float_time, 'hours').format();
 
             // Setup entries in the hourly prediction data store.
             hourly_predictions[current_hour] = {};
@@ -233,6 +243,7 @@ function tawhiriRequest(settings, extra_settings){
     }
 }
 
+// 'SINGLE' run mode
 function processTawhiriResults(data, settings){
     // Process results from a Tawhiri run.
 
@@ -396,7 +407,8 @@ function plotStandardPrediction(prediction){
     var path_polyline = L.polyline(
         prediction.flight_path,
         {
-            weight: 3,
+            weight: 4,
+            opacity: 0.5,
             color: '#000000'
         }
     ).addTo(map);
@@ -443,7 +455,7 @@ function writePredictionInfo(settings, metadata, request) {
     $("#dataset").html(dataset);
 }
 
-
+// 'Multiple' run mode
 function processHourlyTawhiriResults(data, settings, current_hour){
     // Process results from a Tawhiri run.
 
