@@ -65,10 +65,10 @@
 <!-- Scenario information -->
 <div id="scenario_info" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
-    <h1>Scenario Information</h1>
-    <span id="cursor_info">Current mouse position: 
-        Lat: <span id="cursor_lat">?</span> 
-        Lon: <span id="cursor_lon">?</span>
+    <h1>정보 패널</h1>
+    <span id="cursor_info">마우스 커서 좌표: 
+        위도: <span id="cursor_lat">?</span> 
+        경도: <span id="cursor_lon">?</span>
     </span><br />
     <span id="cursor_pred" style="display:none">
         Range: <span id="cursor_pred_range"></span>km, 
@@ -88,7 +88,7 @@
             <a class="control_button" id="dlkml">KML</a>
         </span>
     </span>
-    <br />
+    <!-- <br />
     <span class="ui-corner-all control_buttons">
         <a class="control_button" id="showHideDebug">Show Debug</a> | 
         <a class="control_button" id="showHideForm">Hide Launch Card</a> |
@@ -97,7 +97,7 @@
     <br />
     <span><b>Non-Commercial Use Only. Please read the 'About' page.</b></span>
     <br />
-    <span><b>The Tawhiri engine is currently experiencing some performance issues. Please be patient!</b></span>
+    <span><b>The Tawhiri engine is currently experiencing some performance issues. Please be patient!</b></span> -->
 </div>
 
 <!-- Save location to cookie -->
@@ -357,7 +357,7 @@
     <form action="" id="modelForm" name="modelForm">
     <table id="launch-card">
         <tr>
-            <td>Prediction Type (<a class="tipsyLink" title="Information on the hourly/daily prediction functions." href="https://github.com/projecthorus/leaflet_predictor/wiki#using-the-hourlydaily-prediction-functionality" target="_blank">info</a>):</td>
+            <td>예측 타입:</td>
             <td><select id="prediction_type">
                 <option value="multisite" selected="selected">Multi-site</option>
                 <option value="single">Single</option>
