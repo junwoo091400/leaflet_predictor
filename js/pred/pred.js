@@ -86,6 +86,7 @@ function readURLParams() {
 
         if(launch_datetime == "now"){
             launch_moment = moment.utc();
+            launch_moment.add(9, 'hours'); // Convert UTC to KST
             time_was_now = true;
         } else {
             launch_moment = moment.utc(launch_datetime);

@@ -21,7 +21,8 @@ function initLaunchCard(){
     // $('#min').val(today.getMinutes());
     // $('#sec').val(today.getSeconds());
 
-    var today = moment.utc();
+    // KOREAN TIME (UTC+9)
+    var today = moment.utc().add(9, 'hours');
 
     $('#year').val(today.year());
     $('#day').val(today.date());
@@ -50,7 +51,8 @@ function runPrediction(){
     var minute = $('#min').val();
 
     // Months are zero-indexed in Javascript. Wat.
-    var launch_time = moment.utc([year, month-1, day, hour, minute, 0, 0]);
+    // Launch time is in UTC
+    var launch_time = moment.utc([year, month-1, day, hour, minute, 0, 0]).subtract(9, 'hours');
     run_settings.launch_datetime = launch_time.format();
     extra_settings.launch_moment = launch_time;
 
@@ -97,7 +99,8 @@ function runPrediction(){
     if (time_was_now){
         url.searchParams.set('launch_datetime','now');
     }else {
-        url.searchParams.set('launch_datetime', run_settings.launch_datetime);
+        // Trick to keep URL embedding in KST
+        url.searchParams.set('launch_datetime', moment.utc([year, month-1, day, hour, minute, 0, 0]).format());
     }
     url.searchParams.set('launch_latitude', run_settings.launch_latitude);
     url.searchParams.set('launch_longitude', run_settings.launch_longitude);
