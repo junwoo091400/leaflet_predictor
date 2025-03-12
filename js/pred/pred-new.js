@@ -135,7 +135,8 @@ function runPrediction(){
 // Sondehub Tawhiri Instance
 var tawhiri_api = "https://api.v2.sondehub.org/tawhiri";
 // Approximately how many hours into the future the model covers.
-var MAX_PRED_HOURS = 24;
+var MAX_PRED_HOURS = 24 * 7;
+var MAX_PRED_LOOPS = 10;
 
 function tawhiriRequest(settings, extra_settings){
     // Request a prediction via the Tawhiri API.
@@ -235,6 +236,12 @@ function tawhiriRequest(settings, extra_settings){
             return;
         }
 
+        // Dynamically change max hour depending on time step (for good coloring on map)
+        MAX_PRED_HOURS = time_step * MAX_PRED_LOOPS;
+        if (MAX_PRED_HOURS > 24 * 7) {
+            MAX_PRED_HOURS = 24 * 7
+        }
+
         // if(settings.profile != "standard_profile"){
         //     throwError("Hourly/Daily predictions are only available for the standard flight profile.");
         //     return;
@@ -242,6 +249,11 @@ function tawhiriRequest(settings, extra_settings){
 
         // Loop to advance time until end of prediction window
         while(current_hour < MAX_PRED_HOURS){
+            // Prevent too many loops on 'Hourly' mode and others
+            if (current_hour/time_step > MAX_PRED_LOOPS){
+                break;
+            }
+
             // Update launch time
             var current_moment = moment(extra_settings.launch_moment).add(current_hour, 'hours');
             
@@ -564,7 +576,7 @@ function plotMultiplePrediction(prediction, current_hour){
         stroke: true,
         weight: 1,
         color: "#000000",
-        title: '<b>Launch Time: </b>' + launch.datetime.format() + '<br/>' + 'Predicted Landing ('+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+')',
+        // title: '<b>Launch Time: </b>' + launch.datetime.format() + '<br/>' + 'Predicted Landing ('+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+')',
         current_hour: current_hour // Added in so we can extract this when we get a click event.
     }).addTo(map);
 
@@ -572,9 +584,10 @@ function plotMultiplePrediction(prediction, current_hour){
     var _csv_url = _base_url + "&format=csv";
     var _kml_url = _base_url + "&format=kml";
 
-    var predict_description =  '<b>Launch Time: </b>' + launch.datetime.format() + '<br/>' + 
-    '<b>Predicted Landing:</b> '+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+ '</br>' +
-    '<b>Landing Time: </b>' + landing.datetime.format() + '<br/>' +
+    // Convert from UTC to KST
+    var predict_description =  '<b>Launch: </b>' + launch.datetime.add(9, 'hours').format('MMMM Do YYYY, h:mm:ss a') + '<br/>' + 
+    '<b>Last Coords:</b> '+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+ '</br>' +
+    '<b>Last Time: </b>' + landing.datetime.add(9, 'hours').format('MMMM Do YYYY, h:mm:ss a') + '<br/>' +
     '<b>Download: </b> <a href="'+_kml_url+'" target="_blank">KML</a>  <a href="'+_csv_url+'" target="_blank">CSV</a></br>';
 
     var landing_popup = new L.popup(
