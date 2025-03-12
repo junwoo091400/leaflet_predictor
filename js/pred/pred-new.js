@@ -689,24 +689,24 @@ function showHideHourlyPrediction(e){
     } else {
         // We need to make new icons.
 
-        // var burst_icon = L.icon({
-        //     iconUrl: burst_img,
-        //     iconSize: [16,16],
-        //     iconAnchor: [8,8]
-        // });
+        var burst_icon = L.icon({
+            iconUrl: burst_img,
+            iconSize: [16,16],
+            iconAnchor: [8,8]
+        });
 
-        // var pop_marker = L.marker(
-        //     burst.latlng,
-        //     {
-        //         title: 'Balloon burst ('+burst.latlng.lat.toFixed(4)+', '+burst.latlng.lng.toFixed(4)+ 
-        //         ' at altitude ' + burst.latlng.alt.toFixed(0) + ') at ' 
-        //         + burst.datetime.format("HH:mm") + " UTC",
-        //         icon: burst_icon,
-        //         current_hour: current_hour
-        //     }
-        // ).addTo(map);
+        var pop_marker = L.marker(
+            burst.latlng,
+            {
+                title: 'Balloon burst ('+burst.latlng.lat.toFixed(4)+', '+burst.latlng.lng.toFixed(4)+ 
+                ' at altitude ' + burst.latlng.alt.toFixed(0) + ') at ' 
+                + burst.datetime.format("HH:mm") + " UTC",
+                icon: burst_icon,
+                current_hour: current_hour
+            }
+        ).addTo(map);
         
-        // hourly_predictions[current_hour]['layers']['pop_marker'] = pop_marker;
+        hourly_predictions[current_hour]['layers']['pop_marker'] = pop_marker;
 
         var path_polyline = L.polyline(
             current_pred.flight_path,

@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>CUSF / SondeHub Predictor</title>
+    <title>오물풍선 경로예측기</title>
     <meta charset="utf-8">
-    
+
     <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
     <link href="css/leaflet.css" rel="stylesheet">
     <link href="css/jquery-ui.css" rel="stylesheet">
@@ -357,6 +357,19 @@
     <form action="" id="modelForm" name="modelForm">
     <table id="launch-card">
         <tr>
+            <td>Prediction Type (<a class="tipsyLink" title="Information on the hourly/daily prediction functions." href="https://github.com/projecthorus/leaflet_predictor/wiki#using-the-hourlydaily-prediction-functionality" target="_blank">info</a>):</td>
+            <td><select id="prediction_type">
+                <option value="multisite" selected="selected">Multi-site</option>
+                <option value="single">Single</option>
+                <option value="1_hour">Hourly</option>
+                <option value="3_hour">3-Hourly</option>
+                <option value="6_hour">6-Hourly</option>
+                <option value="12_hour">12-Hourly</option>
+                <option value="daily">Daily</option>
+            </select></td>
+        </tr>
+
+        <tr>
             <td>부양 장소:
                 <span>
                     <a id="cookieLocations" class="tipsyLink" 
@@ -483,19 +496,6 @@
             <td>비행 시간</td>
             <!-- <td><input id="float_time" type="range" min="1" max="7" value="2" onInput="$('#float_time_val').html($(this).val()); runPrediction();"/><span id="float_time_val">2</span></td> -->
             <td><input id="float_time" type="text" name="float_time" value="1"></td>
-        </tr>
-
-        <tr>
-            <td>Prediction Type (<a class="tipsyLink" title="Information on the hourly/daily prediction functions." href="https://github.com/projecthorus/leaflet_predictor/wiki#using-the-hourlydaily-prediction-functionality" target="_blank">info</a>):</td>
-            <td><select id="prediction_type">
-                <option value="multisite" selected="selected">Multi-site</option>
-                <option value="single">Single</option>
-                <option value="1_hour">Hourly</option>
-                <option value="3_hour">3-Hourly</option>
-                <option value="6_hour">6-Hourly</option>
-                <option value="12_hour">12-Hourly</option>
-                <option value="daily">Daily</option>
-            </select></td>
         </tr>
 
         <!-- <tr>
