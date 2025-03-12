@@ -76,9 +76,14 @@ function runPrediction(){
         run_settings.descent_rate = parseFloat($('#drag').val());
     } else {
         run_settings.float_altitude = parseFloat($('#burst').val());
-        run_settings.stop_datetime = launch_time.add(1, 'days').format();
-    }
 
+        // Temporary
+        run_settings.stop_datetime = moment(launch_time).add(3, 'hours').format();
+
+        // run_settings.stop_datetime = launch_time.add(1, 'days').format();
+        // NOTE: Running "launch_time.add(1, 'days')" will modify the launch_time object,
+        // which will in turn modify the extra_settings.launch_moment, as it's reference copied
+    }
 
     // Update the URL with the supplied parameters.
     url = new URL(window.location.href);
@@ -107,7 +112,6 @@ function runPrediction(){
         'CUSF / SondeHub Predictor',
         url.href
     );
-
 
     // Run the request
     tawhiriRequest(run_settings, extra_settings);
@@ -180,16 +184,19 @@ function tawhiriRequest(settings, extra_settings){
         while(current_hour < MAX_PRED_HOURS){
             // Update launch time
             var current_moment = moment(extra_settings.launch_moment).add(current_hour, 'hours');
+            
+            // Set to Max 3 hours by setting stop datetime (necessary for float profile)
+            var stop_datetime = moment(current_moment).add(3, 'hours').format();
 
             // Setup entries in the hourly prediction data store.
             hourly_predictions[current_hour] = {};
             hourly_predictions[current_hour]['layers'] = {};
             hourly_predictions[current_hour]['settings'] = {...settings};
             hourly_predictions[current_hour]['settings']['launch_datetime'] = current_moment.format();
+            hourly_predictions[current_hour]['settings']['stop_datetime'] = stop_datetime;
             
             // Copy our current settings for passing into the requst.
             var current_settings = {...hourly_predictions[current_hour]['settings']};
-
             $.get( {url:tawhiri_api, 
                 data: current_settings, 
                 current_hour: current_hour} )
