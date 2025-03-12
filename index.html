@@ -55,7 +55,7 @@
     </div>
 
 <!-- Scenario information -->
-<!-- <div id="scenario_info" class="box ui-corner-all">
+<div id="scenario_info" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <h1>Scenario Information</h1>
     <span id="cursor_info">Current mouse position: 
@@ -90,7 +90,7 @@
     <span><b>Non-Commercial Use Only. Please read the 'About' page.</b></span>
     <br />
     <span><b>The Tawhiri engine is currently experiencing some performance issues. Please be patient!</b></span>
-</div> -->
+</div>
 
 <!-- Save location to cookie -->
 <div id="location_save" class="box ui-corner-all">
@@ -488,9 +488,10 @@
         <tr>
             <td>Prediction Type (<a class="tipsyLink" title="Information on the hourly/daily prediction functions." href="https://github.com/projecthorus/leaflet_predictor/wiki#using-the-hourlydaily-prediction-functionality" target="_blank">info</a>):</td>
             <td><select id="prediction_type">
+                <option value="multisite" selected="selected">Multi-site</option>
                 <option value="single">Single</option>
                 <option value="1_hour">Hourly</option>
-                <option value="3_hour" selected="selected">3-Hourly</option>
+                <option value="3_hour">3-Hourly</option>
                 <option value="6_hour">6-Hourly</option>
                 <option value="12_hour">12-Hourly</option>
                 <option value="daily">Daily</option>

@@ -119,6 +119,9 @@ function runPrediction(){
         url.href
     );
 
+    // First Clear the Map
+    clearMapItems();
+
     // Run the request
     tawhiriRequest(run_settings, extra_settings);
 }
@@ -158,11 +161,55 @@ function tawhiriRequest(settings, extra_settings){
                 //throwError("test.");
                 //console.log(data);
             });
+    } else if (settings.pred_type=='multisite') {
+        // Re-use hourly_predictions structure to depict multi-site predictions
+        hourly_predictions = {};
+        var current_moment = moment(extra_settings.launch_moment).add(current_hour, 'hours');
+        var stop_datetime = moment(current_moment).add(extra_settings.float_time, 'hours').format();
+
+        let launchsites = [[37.8419, 126.6316], [38.1154, 126.8804], [38.3304, 127.2903], [38.3402, 127.9769], [38.6357, 128.3480]];
+
+        // API call for each launch site
+        for (let i=0; i<5; i++) {
+            // Setup entries in the hourly prediction data store.
+            hourly_predictions[i] = {};
+            hourly_predictions[i]['layers'] = {};
+            hourly_predictions[i]['settings'] = {...settings};
+            hourly_predictions[i]['settings']['launch_datetime'] = current_moment.format();
+            hourly_predictions[i]['settings']['stop_datetime'] = stop_datetime;
+            hourly_predictions[i]['settings']['launch_latitude'] = launchsites[i][0];
+            hourly_predictions[i]['settings']['launch_longitude'] = launchsites[i][1];
+
+            var current_settings = {...hourly_predictions[i]['settings']};
+
+            $.get( {url:tawhiri_api, 
+                data: current_settings, 
+                current_hour: i} )
+                .done(function( data ) {
+                    processHourlyTawhiriResults(data, current_settings, i);
+                })
+                .fail(function(data) {
+                    var prediction_error = "Prediction failed. Tawhiri may be under heavy load, please try again. ";
+                    if(data.hasOwnProperty("responseJSON"))
+                    {
+                        prediction_error += data.responseJSON.error.description;
+                    }
+    
+                    // Silently handle failed predictions, which are most likely
+                    // because the prediction time was too far into the future.
+                    delete hourly_predictions[i]
+                    //throwError(prediction_error);
+                })
+                .always(function(data) {
+                    //throwError("test.");
+                    //console.log(data);
+                });
+        }
     } else {
         // For Multiple predictions, we do things a bit differently.
         hourly_mode = true;
         // First up clear off anything on the map.
-        clearMapItems();
+        // clearMapItems();
 
         // Also clean up any hourly prediction data.
         hourly_predictions = {};
@@ -339,7 +386,6 @@ function parsePrediction(prediction){
 function plotStandardPrediction(prediction){
 
     appendDebug("Flight data parsed, creating map plot...");
-    clearMapItems();
 
     var launch = prediction.launch;
     var landing = prediction.landing;
@@ -494,16 +540,15 @@ function plotMultiplePrediction(prediction, current_hour){
         iconAnchor: [5,5]
     });
 
+    var launch_marker = L.marker(
+        launch.latlng,
+        {
+            title: 'Balloon launch ('+launch.latlng.lat.toFixed(4)+', '+launch.latlng.lng.toFixed(4)+')',
+            icon: launch_icon
+        }
+    ).addTo(map);
 
     if(!map_items.hasOwnProperty("launch_marker")){
-        var launch_marker = L.marker(
-            launch.latlng,
-            {
-                title: 'Balloon launch ('+launch.latlng.lat.toFixed(4)+', '+launch.latlng.lng.toFixed(4)+')',
-                icon: launch_icon
-            }
-        ).addTo(map);
-
         map_items['launch_marker'] = launch_marker;
     }
 
@@ -537,6 +582,8 @@ function plotMultiplePrediction(prediction, current_hour){
     // land_marker.on('click', showHideHourlyPrediction);
     showHideHourlyPrediction({target: land_marker});
 
+    // Always plot Launch marker for each multi-site
+    hourly_predictions[current_hour]['layers']['launch_marker'] = launch_marker;
     hourly_predictions[current_hour]['layers']['landing_marker'] = land_marker;
     hourly_predictions[current_hour]['landing_latlng'] = landing.latlng;
 
@@ -551,6 +598,7 @@ function plotMultiplePrediction(prediction, current_hour){
         }
     }
     
+    // Lines 'between' landing sites
     // If we dont have any undefined elements, plot.
     // if(landing_track_complete){
     //     if(hourly_polyline){
